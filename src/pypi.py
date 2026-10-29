@@ -12,16 +12,13 @@ from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 from config import LATEST_VERSION
+from errors import RepositoryError
 from requirements import RequirementError, parse_requirement
 
 TIMEOUT_SECONDS = 5
 MAX_ATTEMPTS = 3
 HTTP_NOT_FOUND = 404
-USER_AGENT = "depviz/0.2"
-
-
-class RepositoryError(Exception):
-    """Ошибка получения данных из репозитория пакетов."""
+USER_AGENT = "depviz/0.3"
 
 
 class PackageNotFoundError(RepositoryError):

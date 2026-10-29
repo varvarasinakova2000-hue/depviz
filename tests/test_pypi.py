@@ -2,24 +2,17 @@
 
 import io
 import json
-import os
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import redirect_stderr
 from unittest import mock
 from urllib.error import HTTPError, URLError
 
 import pypi
-from main import EXIT_REPOSITORY_ERROR, EXIT_SUCCESS, main
-from pypi import (
-    RepositoryError,
-    build_url,
-    get_package_info,
-    parse_package_info,
-)
+from errors import RepositoryError
+from main import EXIT_REPOSITORY_ERROR, main
+from pypi import build_url, get_package_info, parse_package_info
 
-TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 PYPI_URL = "https://pypi.org/pypi"
-TEST_REPO = os.path.join(TESTS_DIR, "repos", "simple.txt")
 REQUESTS_INFO = {
     "info": {
         "name": "requests",
@@ -170,23 +163,7 @@ class GetPackageInfoTest(unittest.TestCase):
 
 @mock.patch.object(pypi, "urlopen")
 class MainTest(unittest.TestCase):
-    """Вывод прямых зависимостей при запуске приложения."""
-
-    def test_prints_dependencies(self, urlopen):
-        """Выводятся обязательные и необязательные зависимости."""
-        urlopen.return_value = fake_response(REQUESTS_INFO)
-        out = io.StringIO()
-        with redirect_stdout(out):
-            code = main(["-p", "requests", "-r", PYPI_URL,
-                         "-v", "2.31.0"])
-        self.assertEqual(code, EXIT_SUCCESS)
-        self.assertEqual(out.getvalue().splitlines(), [
-            "Прямые зависимости пакета requests 2.31.0:",
-            "  charset-normalizer <4,>=2",
-            "  idna <4,>=2.5",
-            "Необязательные зависимости (extras):",
-            "  PySocks !=1.5.7,>=1.5.6 [extra == 'socks']",
-        ])
+    """Ошибки репозитория при запуске приложения."""
 
     def test_reports_repository_error(self, urlopen):
         """Ошибка репозитория выводится в stderr с кодом 1."""
@@ -198,15 +175,6 @@ class MainTest(unittest.TestCase):
             code = main(["-p", "requests", "-r", PYPI_URL, "-v", "9.9"])
         self.assertEqual(code, EXIT_REPOSITORY_ERROR)
         self.assertIn("Ошибка: версия 9.9", err.getvalue())
-
-    def test_test_mode_not_supported(self, urlopen):
-        """Режим test на этом этапе не поддерживается."""
-        err = io.StringIO()
-        with redirect_stderr(err):
-            code = main(["-p", "A", "-r", TEST_REPO, "-m", "test"])
-        self.assertEqual(code, EXIT_REPOSITORY_ERROR)
-        self.assertIn("режим test", err.getvalue())
-        urlopen.assert_not_called()
 
 
 if __name__ == "__main__":

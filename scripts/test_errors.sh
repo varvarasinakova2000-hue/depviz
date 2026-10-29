@@ -50,4 +50,7 @@ run -p requests -r "$URL" -v 99.0
 run -p no-such-package-depviz -r "$URL" -v latest
 run -p requests -r https://pypi.org/simple -v 2.31.0
 run -p requests -r https://no-such-host.invalid/pypi -v 2.31.0
-run -p A -r "$REPO" -m test
+
+echo "--- тестовый репозиторий ---"
+run -p A -r tests/repos/broken.txt -m test
+run -p Z -r "$REPO" -m test
