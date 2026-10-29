@@ -4,7 +4,7 @@ import io
 import os
 import tempfile
 import unittest
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import redirect_stderr
 
 from config import (
     MODE_REMOTE,
@@ -16,7 +16,7 @@ from config import (
     validate_output,
     validate_version,
 )
-from main import EXIT_CONFIG_ERROR, EXIT_SUCCESS, main
+from main import EXIT_CONFIG_ERROR, main
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 TEST_REPO = os.path.join(TESTS_DIR, "repos", "simple.txt")
@@ -61,21 +61,6 @@ class ValidConfigTest(unittest.TestCase):
         config = parse(["-p", "A", "-r", TEST_REPO, "-m", "test"])
         self.assertEqual(config.repository, TEST_REPO)
         self.assertEqual(config.version, "-")
-
-    def test_main_prints_key_value(self):
-        """При запуске выводятся все параметры в виде ключ=значение."""
-        out = io.StringIO()
-        with redirect_stdout(out):
-            code = main(["-p", "requests", "-d", "2"] + REMOTE)
-        self.assertEqual(code, EXIT_SUCCESS)
-        self.assertEqual(out.getvalue().splitlines(), [
-            "package=requests",
-            f"repository={PYPI_URL}",
-            "mode=remote",
-            "version=2.31.0",
-            "output=graph.svg",
-            "max_depth=2",
-        ])
 
 
 class InvalidConfigTest(unittest.TestCase):

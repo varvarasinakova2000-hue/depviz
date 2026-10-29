@@ -50,17 +50,6 @@ class Config:
     output: str
     max_depth: int
 
-    def as_pairs(self):
-        """Вернуть параметры списком пар (ключ, значение)."""
-        return [
-            ("package", self.package),
-            ("repository", self.repository),
-            ("mode", self.mode),
-            ("version", self.version),
-            ("output", self.output),
-            ("max_depth", self.max_depth),
-        ]
-
 
 def build_parser():
     """Создать парсер параметров командной строки."""

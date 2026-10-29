@@ -44,3 +44,10 @@ echo "--- глубина анализа ---"
 run -p requests -r "$URL" -v 2.31.0 -d abc
 run -p requests -r "$URL" -v 2.31.0 -d 0
 run -p requests -r "$URL" -v 2.31.0 -d 101
+
+echo "--- репозиторий пакетов ---"
+run -p requests -r "$URL" -v 99.0
+run -p no-such-package-depviz -r "$URL" -v latest
+run -p requests -r https://pypi.org/simple -v 2.31.0
+run -p requests -r https://no-such-host.invalid/pypi -v 2.31.0
+run -p A -r "$REPO" -m test

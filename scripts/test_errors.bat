@@ -39,6 +39,13 @@ echo --- глубина анализа ---
 call :run -p requests -r %URL% -v 2.31.0 -d abc
 call :run -p requests -r %URL% -v 2.31.0 -d 0
 call :run -p requests -r %URL% -v 2.31.0 -d 101
+
+echo --- репозиторий пакетов ---
+call :run -p requests -r %URL% -v 99.0
+call :run -p no-such-package-depviz -r %URL% -v latest
+call :run -p requests -r https://pypi.org/simple -v 2.31.0
+call :run -p requests -r https://no-such-host.invalid/pypi -v 2.31.0
+call :run -p A -r %REPO% -m test
 exit /b 0
 
 :run

@@ -1,6 +1,8 @@
 #!/bin/sh
-# Демонстрация запуска с корректными параметрами.
+# Демонстрация получения прямых зависимостей пакетов из PyPI.
 cd "$(dirname "$0")/.." || exit 1
+
+URL=https://pypi.org/pypi
 
 run() {
     echo "> run.sh $*"
@@ -9,8 +11,8 @@ run() {
     echo
 }
 
-run -p requests -r https://pypi.org/pypi -v 2.31.0
-run --package flask --repo https://pypi.org/pypi --mode remote \
+run -p requests -r "$URL" -v 2.31.0
+run --package flask --repo "$URL" --mode remote \
     --version 3.0.0 --output flask.svg --max-depth 5
-run -p requests -r https://pypi.org/pypi -v latest
-run -p A -r tests/repos/simple.txt -m test -d 2 -o test_graph.svg
+run -p six -r "$URL" -v 1.16.0
+run -p requests -r "$URL" -v latest

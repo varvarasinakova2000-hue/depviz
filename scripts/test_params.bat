@@ -1,15 +1,16 @@
 @echo off
-rem Демонстрация запуска с корректными параметрами.
+rem Демонстрация получения прямых зависимостей пакетов из PyPI.
 setlocal
 cd /d "%~dp0.."
 set RUN="%CD%\run.bat"
 chcp 65001 >nul
+set URL=https://pypi.org/pypi
 
-call :run -p requests -r https://pypi.org/pypi -v 2.31.0
-call :run --package flask --repo https://pypi.org/pypi --mode remote ^
+call :run -p requests -r %URL% -v 2.31.0
+call :run --package flask --repo %URL% --mode remote ^
     --version 3.0.0 --output flask.svg --max-depth 5
-call :run -p requests -r https://pypi.org/pypi -v latest
-call :run -p A -r tests\repos\simple.txt -m test -d 2 -o test_graph.svg
+call :run -p six -r %URL% -v 1.16.0
+call :run -p requests -r %URL% -v latest
 exit /b 0
 
 :run
